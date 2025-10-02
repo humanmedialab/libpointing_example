@@ -16,9 +16,7 @@ Usage:
     python build_homebrew.py build_ext --inplace
 """
 
-from distutils.core import setup
-from distutils.extension import Extension
-from Cython.Distutils import build_ext
+from setuptools import setup, Extension
 from Cython.Build import cythonize
 import platform
 
@@ -28,6 +26,8 @@ libpointing_include = f"{brew_prefix}/include"
 libpointing_lib = f"{brew_prefix}/lib"
 
 system = platform.system()
+
+windows = False
 
 if system == 'Darwin':
     ext_modules = [Extension(
@@ -44,6 +44,6 @@ else:
     raise NotImplementedError(f"Platform {system} not configured yet. Please use macOS with Homebrew libpointing.")
 
 setup(
-    cmdclass = {'build_ext': build_ext},
-    ext_modules = cythonize(ext_modules, compiler_directives={'language_level' : "3"})
+    name='libpointing',
+    ext_modules = cythonize(ext_modules, compiler_directives={'language_level' : "3"}, compile_time_env={'WINDOWS': windows})
 )

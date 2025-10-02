@@ -44,7 +44,7 @@ fi
 if [ ! -d "venv" ]; then
     echo ""
     echo "🐍 Creating virtual environment..."
-    python3 -m venv venv
+    python3.12 -m venv venv
     echo "✅ Virtual environment created"
 else
     echo "✅ Virtual environment exists"
@@ -57,9 +57,10 @@ source venv/bin/activate
 
 # Step 4: Install Python dependencies
 echo ""
-echo "📦 Installing Python dependencies..."
+echo "📦 Installing Python dependencies (including Cython and setuptools)..."
 pip install --upgrade pip
 pip install -r requirements.txt
+echo "✅ All dependencies installed"
 
 # Step 5: Copy helper files
 echo ""
