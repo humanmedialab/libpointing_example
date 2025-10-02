@@ -4,6 +4,23 @@ A Python demonstration application that uses the [libpointing](http://libpointin
 
 ## Quick Start
 
+### Automated Setup (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/libpointing_example.git
+cd libpointing_example
+
+# Run the automated setup script
+./setup.sh
+
+# Run the demo
+source venv/bin/activate
+python libpointing_demo.py
+```
+
+### Manual Setup
+
 ```bash
 # Clone and setup
 git clone https://github.com/yourusername/libpointing_example.git
@@ -245,6 +262,7 @@ libpointing_example/
 ├── requirements.txt           # Python dependencies
 ├── config.json               # Configuration file
 ├── .gitignore                # Git ignore rules
+├── setup.sh                  # Automated setup script
 ├── libpointing_demo.py       # Main demo application
 ├── __init__.py               # Fixed __init__.py for libpointing (to copy)
 ├── build_homebrew.py         # Build script for Homebrew (to copy)
@@ -260,10 +278,13 @@ libpointing_example/
 
 ### Helper Files
 
-The repository includes two helper files in the root directory that need to be copied into the libpointing library during setup:
+The repository includes helper files in the root directory:
 
+- **`setup.sh`**: Automated setup script that handles the entire installation process
 - **`__init__.py`**: Fixed version that properly handles platform-specific imports (prevents Windows-only imports on macOS/Linux)
 - **`build_homebrew.py`**: Build script configured for Homebrew-installed libpointing on macOS
+
+These files need to be copied into the libpointing library during setup (automated by `setup.sh`).
 
 ## Troubleshooting
 
