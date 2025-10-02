@@ -2,6 +2,32 @@
 
 A Python demonstration application that uses the [libpointing](http://libpointing.org/) library to capture raw HID (Human Interface Device) events directly from pointing devices, bypassing the operating system's transfer functions.
 
+## Quick Start
+
+```bash
+# Clone and setup
+git clone https://github.com/yourusername/libpointing_example.git
+cd libpointing_example
+git clone https://github.com/INRIA/libpointing.git
+
+# Install dependencies
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Fix libpointing bindings
+cp __init__.py libpointing/bindings/Python/cython/libpointing/__init__.py
+cp build_homebrew.py libpointing/bindings/Python/cython/build_homebrew.py
+
+# Build Python bindings
+cd libpointing/bindings/Python/cython
+python build_homebrew.py build_ext --inplace
+cd ../../../..
+
+# Run the demo
+python libpointing_demo.py
+```
+
 ## Overview
 
 This demo showcases how to:
@@ -37,30 +63,102 @@ This demo showcases how to:
 
 ## Installation
 
-1. **Clone or download this repository**
+### Step 1: Clone the Repository
 
-2. **Set up Python virtual environment**:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+```bash
+git clone https://github.com/yourusername/libpointing_example.git
+cd libpointing_example
+```
 
-3. **Install Python dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Step 2: Clone the libpointing Library
 
-4. **Build the libpointing Python bindings**:
-   ```bash
-   cd libpointing/bindings/Python/cython
-   python build_homebrew.py build_ext --inplace
-   cd ../../../..
-   ```
+The libpointing library needs to be cloned as a submodule or directly:
 
-   Verify the build was successful:
-   ```bash
-   python -c "import sys; sys.path.insert(0, 'libpointing/bindings/Python/cython'); from libpointing.libpointing import PointingDevice; print('✓ Bindings loaded successfully!')"
-   ```
+```bash
+# Clone the official libpointing library
+git clone https://github.com/INRIA/libpointing.git
+```
+
+### Step 3: Set Up Python Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Step 4: Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 5: Fix the libpointing Python Bindings for macOS
+
+The original libpointing bindings need two modifications to work properly on macOS:
+
+#### 5a. Fix the `__init__.py` file
+
+The original `__init__.py` tries to import Windows-specific modules on all platforms. Replace it with the fixed version:
+
+```bash
+cp __init__.py libpointing/bindings/Python/cython/libpointing/__init__.py
+```
+
+Or manually edit `libpointing/bindings/Python/cython/libpointing/__init__.py` to wrap the Windows import in a platform check:
+
+```python
+import platform
+
+from .libpointing import (
+    PointingDevice,
+    DisplayDevice,
+    TransferFunction,
+    PointingDeviceManager,
+    PointingDeviceDescriptor,
+    )
+
+# Windows-specific acceleration function
+if platform.system() == 'Windows':
+    from .libpointing import winSystemPointerAcceleration
+```
+
+#### 5b. Add the Homebrew build script
+
+Copy the `build_homebrew.py` script into the bindings directory:
+
+```bash
+cp build_homebrew.py libpointing/bindings/Python/cython/build_homebrew.py
+```
+
+This script is configured to use the Homebrew-installed libpointing library.
+
+### Step 6: Build the libpointing Python Bindings
+
+```bash
+cd libpointing/bindings/Python/cython
+python build_homebrew.py build_ext --inplace
+cd ../../../..
+```
+
+**Note**: If your terminal has a Python alias override, use the explicit path:
+
+```bash
+cd libpointing/bindings/Python/cython
+/Users/yourusername/projects/libpointing_example/venv/bin/python build_homebrew.py build_ext --inplace
+cd ../../../..
+```
+
+### Step 7: Verify the Installation
+
+```bash
+python -c "import sys; sys.path.insert(0, 'libpointing/bindings/Python/cython'); from libpointing.libpointing import PointingDevice; print('✓ Bindings loaded successfully!')"
+```
+
+Or with explicit Python path:
+
+```bash
+./venv/bin/python -c "import sys; sys.path.insert(0, 'libpointing/bindings/Python/cython'); from libpointing.libpointing import PointingDevice; print('✓ Bindings loaded successfully!')"
+```
 
 ## Configuration
 
@@ -110,6 +208,11 @@ Parameters:
    ```bash
    python libpointing_demo.py
    ```
+   
+   If your terminal has a Python alias override, use the explicit path:
+   ```bash
+   ./venv/bin/python libpointing_demo.py
+   ```
 
 3. **Controls**:
    - Move your mouse to see raw HID data
@@ -141,17 +244,42 @@ libpointing_example/
 ├── README.md                  # This file
 ├── requirements.txt           # Python dependencies
 ├── config.json               # Configuration file
+├── .gitignore                # Git ignore rules
 ├── libpointing_demo.py       # Main demo application
-├── libpointing/              # libpointing library source
+├── __init__.py               # Fixed __init__.py for libpointing (to copy)
+├── build_homebrew.py         # Build script for Homebrew (to copy)
+├── libpointing/              # libpointing library (cloned from GitHub)
 │   └── bindings/
 │       └── Python/
 │           └── cython/       # Python bindings
-│               ├── build_homebrew.py  # Build script for Homebrew installation
+│               ├── build_homebrew.py  # (copied here during setup)
 │               └── libpointing/       # Built Python module
+│                   └── __init__.py    # (fixed during setup)
 └── venv/                     # Python virtual environment
 ```
 
+### Helper Files
+
+The repository includes two helper files in the root directory that need to be copied into the libpointing library during setup:
+
+- **`__init__.py`**: Fixed version that properly handles platform-specific imports (prevents Windows-only imports on macOS/Linux)
+- **`build_homebrew.py`**: Build script configured for Homebrew-installed libpointing on macOS
+
 ## Troubleshooting
+
+### Setup Issues
+
+**Error: Platform-specific import errors on non-Windows systems**
+- Make sure you copied the fixed `__init__.py` file:
+  ```bash
+  cp __init__.py libpointing/bindings/Python/cython/libpointing/__init__.py
+  ```
+
+**Can't find build_homebrew.py in libpointing/bindings/Python/cython/**
+- Copy the build script from the root directory:
+  ```bash
+  cp build_homebrew.py libpointing/bindings/Python/cython/build_homebrew.py
+  ```
 
 ### Build Issues
 
@@ -161,6 +289,12 @@ libpointing_example/
 
 **Error: `ModuleNotFoundError: No module named 'Cython'`**
 - Install Cython: `pip install Cython`
+
+**Python version mismatch or alias issues**
+- Use the explicit venv Python path:
+  ```bash
+  ./venv/bin/python build_homebrew.py build_ext --inplace
+  ```
 
 ### Runtime Issues
 
