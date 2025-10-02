@@ -4,7 +4,26 @@ A Python demonstration application that uses the [libpointing](http://libpointin
 
 ## Quick Start
 
-### Automated Setup (Recommended)
+### Windows (Recommended - Simplest Setup!)
+
+**⚠️ IMPORTANT:** Requires Python 3.11 / 3.12 (not 3.13+)
+
+```powershell
+# Clone the repository
+git clone https://github.com/yourusername/libpointing_example.git
+cd libpointing_example
+
+# Run the automated setup script (will automatically use Python 3.11 / 3.12)
+.\setup_windows.ps1
+
+# Run the demo
+.\venv\Scripts\Activate.ps1
+python libpointing_demo.py
+```
+
+**Note:** On Windows, libpointing uses precompiled binaries from PyPI. No compilation needed!
+
+### macOS (Automated Setup)
 
 ```bash
 # Clone the repository
@@ -20,6 +39,29 @@ python libpointing_demo.py
 ```
 
 ### Manual Setup
+
+#### Windows
+
+**⚠️ IMPORTANT:** Requires Python 3.11 / 3.12 (not 3.13+)
+
+```powershell
+# Clone and setup
+git clone https://github.com/yourusername/libpointing_example.git
+cd libpointing_example
+
+# Install dependencies (libpointing comes precompiled from PyPI!)
+# Use py -3.12 to specify the correct Python version
+py -3.12 -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+# Run the demo
+python libpointing_demo.py
+```
+
+**That's it!** On Windows, the PyPI package includes precompiled binaries. No building required.
+
+#### macOS
 
 ```bash
 # Clone and setup
@@ -64,6 +106,18 @@ This demo showcases how to:
 
 ## Prerequisites
 
+### Windows
+
+1. **Python 3.11 or 3.12** with pip ⚠️ **IMPORTANT**
+   - Download from [python.org](https://www.python.org/downloads/)
+   - **libpointing on PyPI only supports Python 3.11 and 3.12**
+   - Python 3.13+ is **NOT** supported yet
+   - Make sure to check "Add Python to PATH" during installation
+
+2. **libpointing** (precompiled via PyPI)
+   - Automatically installed with `pip install libpointing`
+   - No additional dependencies needed!
+
 ### macOS
 
 1. **libpointing** (via Homebrew):
@@ -80,6 +134,43 @@ This demo showcases how to:
 
 ## Installation
 
+### Windows Installation
+
+#### Step 1: Clone the Repository
+
+```powershell
+git clone https://github.com/yourusername/libpointing_example.git
+cd libpointing_example
+```
+
+#### Step 2: Set Up Python Virtual Environment
+
+**⚠️ IMPORTANT:** Use Python 3.11 or 3.12 (not 3.13+)
+
+```powershell
+# Use Python 3.11 or 3.12
+py -3.12 -m venv venv
+# or: py -3.11 -m venv venv
+
+.\venv\Scripts\Activate.ps1
+```
+
+#### Step 3: Install Python Dependencies
+
+```powershell
+pip install -r requirements.txt
+```
+
+**That's it!** The `libpointing` package from PyPI includes precompiled Windows binaries. No building or compilation required!
+
+#### Step 4: Run the example
+
+```powershell
+python libpointing_demo.py
+```
+
+### macOS Installation
+
 ### Step 1: Clone the Repository
 
 ```bash
@@ -92,7 +183,6 @@ cd libpointing_example
 The libpointing library needs to be cloned as a submodule or directly:
 
 ```bash
-# Clone the official libpointing library
 git clone https://github.com/INRIA/libpointing.git
 ```
 
@@ -153,15 +243,7 @@ This script is configured to use the Homebrew-installed libpointing library.
 
 ```bash
 cd libpointing/bindings/Python/cython
-python build_homebrew.py build_ext --inplace
-cd ../../../..
-```
-
-**Note**: If your terminal has a Python alias override, use the explicit path:
-
-```bash
-cd libpointing/bindings/Python/cython
-/Users/yourusername/projects/libpointing_example/venv/bin/python build_homebrew.py build_ext --inplace
+./venv/bin/python build_homebrew.py build_ext --inplace
 cd ../../../..
 ```
 
@@ -216,17 +298,31 @@ Parameters:
 
 ## Usage
 
+### Windows
+
+1. **Activate the virtual environment** (if not already active):
+   ```powershell
+   .\venv\Scripts\Activate.ps1
+   ```
+
+2. **Run the demo**:
+   ```powershell
+   python libpointing_demo.py
+   ```
+
+3. **Controls**:
+   - Move your mouse to see raw HID data
+   - `R` - Reset pointer position to center
+   - `ESC` or `Q` - Quit application
+
+### macOS
+
 1. **Activate the virtual environment** (if not already active):
    ```bash
    source venv/bin/activate
    ```
 
 2. **Run the demo**:
-   ```bash
-   python libpointing_demo.py
-   ```
-   
-   If your terminal has a Python alias override, use the explicit path:
    ```bash
    ./venv/bin/python libpointing_demo.py
    ```
@@ -262,33 +358,64 @@ libpointing_example/
 ├── requirements.txt           # Python dependencies
 ├── config.json               # Configuration file
 ├── .gitignore                # Git ignore rules
-├── setup.sh                  # Automated setup script
+├── setup_windows.ps1         # Automated setup script for Windows
+├── setup.sh                  # Automated setup script for macOS
 ├── libpointing_demo.py       # Main demo application
-├── __init__.py               # Fixed __init__.py for libpointing (to copy)
-├── build_homebrew.py         # Build script for Homebrew (to copy)
-├── libpointing/              # libpointing library (cloned from GitHub)
+├── __init__.py               # Fixed __init__.py for libpointing (macOS only)
+├── build_homebrew.py         # Build script for Homebrew (macOS only)
+├── libpointing/              # libpointing library (macOS only - cloned from GitHub)
 │   └── bindings/
 │       └── Python/
-│           └── cython/       # Python bindings
+│           └── cython/       # Python bindings (macOS only)
 │               ├── build_homebrew.py  # (copied here during setup)
 │               └── libpointing/       # Built Python module
 │                   └── __init__.py    # (fixed during setup)
 └── venv/                     # Python virtual environment
 ```
 
+**Note:** On Windows, the `libpointing/` directory is **not needed**. The precompiled library is installed directly via PyPI into the virtual environment.
+
 ### Helper Files
 
 The repository includes helper files in the root directory:
 
-- **`setup.sh`**: Automated setup script that handles the entire installation process
-- **`__init__.py`**: Fixed version that properly handles platform-specific imports (prevents Windows-only imports on macOS/Linux)
-- **`build_homebrew.py`**: Build script configured for Homebrew-installed libpointing on macOS
+- **`setup_windows.ps1`**: Automated setup script for Windows (uses PyPI precompiled binaries)
+- **`setup.sh`**: Automated setup script for macOS/Linux (builds from source)
+- **`__init__.py`**: Fixed version that properly handles platform-specific imports (macOS only - prevents Windows-only imports on macOS/Linux)
+- **`build_homebrew.py`**: Build script configured for Homebrew-installed libpointing on macOS (macOS only)
 
-These files need to be copied into the libpointing library during setup (automated by `setup.sh`).
+**Windows users:** Only `setup_windows.ps1` is needed. The PyPI package handles everything else automatically!
+
+**macOS users:** These files need to be copied into the libpointing library during setup (automated by `setup.sh`).
 
 ## Troubleshooting
 
-### Setup Issues
+### Windows Issues
+
+**Error: No matching distribution found for libpointing**
+- **This usually means you're using Python 3.13 or newer!**
+- libpointing on PyPI only supports Python 3.11 and 3.12
+- Check your Python version: `python --version`
+- Use the correct version: `py -3.11 -m venv venv` or `py -3.12 -m venv venv`
+- Delete the old venv folder and recreate it with the correct Python version
+
+**Error: Cannot import libpointing**
+- Make sure you activated the virtual environment: `.\venv\Scripts\Activate.ps1`
+- Verify installation: `pip list | findstr libpointing`
+- Try reinstalling: `pip install --force-reinstall libpointing`
+
+**Error: Permission denied when accessing devices**
+- Run PowerShell as Administrator
+- Check Windows Device Manager to ensure your mouse is recognized
+- Some USB receivers may require specific drivers
+
+**PowerShell execution policy error**
+- Run: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+- Or run the setup differently: `powershell -ExecutionPolicy Bypass -File .\setup_windows.ps1`
+
+### macOS Issues
+
+#### Setup Issues
 
 **Error: Platform-specific import errors on non-Windows systems**
 - Make sure you copied the fixed `__init__.py` file:
@@ -302,7 +429,7 @@ These files need to be copied into the libpointing library during setup (automat
   cp build_homebrew.py libpointing/bindings/Python/cython/build_homebrew.py
   ```
 
-### Build Issues
+### Build Issues (macOS only)
 
 **Error: `library 'pointing' not found`**
 - Ensure libpointing is installed: `brew list libpointing`
@@ -320,18 +447,31 @@ These files need to be copied into the libpointing library during setup (automat
 ### Runtime Issues
 
 **Error: Failed to initialize libpointing device**
-- Check device permissions (you may need to grant input monitoring access in System Preferences)
-- Try different URI formats: `any:`, `usb:`, or specific VID:PID
-- Verify your device is connected and recognized by the system
+- **Windows**: 
+  - Check device permissions (you may need to run as Administrator)
+  - Try different URI formats: `any:`, `usb:`, or specific VID:PID
+  - Verify your device is connected and recognized in Device Manager
+  - Some wireless mice may need the USB receiver plugged in
+- **macOS**:
+  - Check device permissions (you may need to grant input monitoring access in System Preferences)
+  - Try different URI formats: `any:`, `usb:`, or specific VID:PID
+  - Verify your device is connected and recognized by the system
 
 **Import Error: No module named 'libpointing'**
-- Ensure you built the Python bindings (see Installation step 4)
-- Check that you're running from the correct directory
-- Verify the virtual environment is activated
+- **Windows**: Activate venv and reinstall: `pip install libpointing`
+- **macOS**: 
+  - Ensure you built the Python bindings (see Installation step 4)
+  - Check that you're running from the correct directory
+  - Verify the virtual environment is activated
 
 ### Device Detection
 
-To find your device's VID:PID:
+**Windows:**
+```powershell
+Get-PnpDevice -Class Mouse
+```
+
+**macOS:**
 ```bash
 system_profiler SPUSBDataType
 ```
